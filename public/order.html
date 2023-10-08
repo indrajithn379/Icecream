@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ice Cream Order Confirmation</title>
+  <link rel="stylesheet" href="order.css">
+  <style>
+    /* CSS for the modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 20px;
+      width: 30%;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ice Cream Order Confirmation</h1>
+  </div>
+  <div class="orders">
+    <script>
+      // Retrieve and display previous orders from localStorage
+      const previousOrders = JSON.parse(localStorage.getItem('orders'));
+
+      if (previousOrders && previousOrders.length > 0) {
+        document.write('<h2><b>Your Orders</b></h2>');
+        document.write('<ul>');
+
+        let total = 0;
+
+        previousOrders.forEach(order => {
+          // Add a checkmark symbol (✓) before each order
+          document.write('<li style="list-style-type: none; font-family: georgia;">' +
+            `<span class="checkmark">&check;&nbsp;</span>${order.quantity} ${order.productName} ${order.toppings}` +
+            ` - Price: Rs.${order.price}</li>`);
+
+          total += order.price;
+        });
+
+        document.write('</ul>');
+      } else {
+        document.write('<p style="margin-left:80px;font-family:fantasy">Your Order is Empty.<p/>')
+      }
+    </script>
+    <div id="btncntr">
+      <button id="bt1" style="color: green;" onclick="showTotal()">Confirm Orders</button>
+      <button id="bt2" style="color: red;" onclick="clearOrders()">Clear Orders</button>
+    </div>
+  </div>
+  
+  <button id="bt" style="color: blue;" onclick="window.location.href='index.html';">HOME</button>
+
+  <!-- Modal to display the total amount -->
+  <div id="totalModal" class="modal">
+    <div class="modal-content">
+      <h2>Total Order Amount</h2>
+      <p id="totalAmount">Rs.0</p>
+      <button onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    function clearOrders() {
+      localStorage.removeItem('orders');
+      location.reload();
+    }
+
+    function showTotal() {
+      const previousOrders = JSON.parse(localStorage.getItem('orders'));
+      let total = 0;
+      if (previousOrders) {
+        previousOrders.forEach(order => {
+          total += order.price;
+        });
+      }
+      const modal = document.getElementById("totalModal");
+      const totalAmount = document.getElementById("totalAmount");
+      totalAmount.textContent = `Rs.${total} /-`;
+      modal.style.display = "block";
+    }
+
+    function closeModal() {
+       const modal = document.getElementById("totalModal");
+      modal.style.display = "none";
+    }
+  </script>
+</body>
+</html>
